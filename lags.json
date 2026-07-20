@@ -1,0 +1,44 @@
+{
+    "template 1": {
+        "housing_new_construction": {
+            "housing_new_construction": 6,
+            "housing_extensions": 3,
+            "non_residential_icef": 1,
+            "non_residential_services": 8,
+            "economic_activity_indicator": 0,
+            "economic_perception_index": 3,
+            "currency_exchange_rate": 0,
+            "interest_rate": 1
+        },
+        "housing_extensions": {
+            "housing_new_construction": 2,
+            "housing_extensions": 7,
+            "non_residential_icef": 7,
+            "non_residential_services": 0,
+            "economic_activity_indicator": 0,
+            "economic_perception_index": 1,
+            "currency_exchange_rate": 0,
+            "interest_rate": 3
+        },
+        "non_residential_icef": {
+            "housing_new_construction": 8,
+            "housing_extensions": 8,
+            "non_residential_icef": 7,
+            "non_residential_services": 8,
+            "economic_activity_indicator": 5,
+            "economic_perception_index": 2,
+            "currency_exchange_rate": 3,
+            "interest_rate": 0
+        },
+        "non_residential_services": {
+            "housing_new_construction": 8,
+            "housing_extensions": 8,
+            "non_residential_icef": 6,
+            "non_residential_services": 8,
+            "economic_activity_indicator": 6,
+            "economic_perception_index": 8,
+            "currency_exchange_rate": 8,
+            "interest_rate": 6
+        }
+    }
+}

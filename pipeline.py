@@ -27,8 +27,7 @@ def convert_date(value):
         print(e,":",value)
         return (np.nan, np.nan)
 
-path = "data/raw/download.xls"
-df = pd.read_excel(path, sheet_name=2, header=4, usecols="B,D:G")
+df = pd.read_excel("data/raw/download.xls", sheet_name=2, header=138, usecols="B,D:G")
 df = df.dropna(how="all")
 df = df.dropna(axis=1, how="all")
 
@@ -37,13 +36,34 @@ df.columns = [
     "housing_new_construction",
     "housing_extensions",
     "non_residential_icef",
-    "non_residential_services",
-]
+    "non_residential_services"
+    ]
+
+extra = [
+    "interest_rate",
+    "currency_exchange_rate",
+    "economic_perception_index",
+    "economic_activity_indicator"
+    ]
+
+
+
+df["interest_rate"] = pd.read_excel("data/raw/interest_rates.xlsx", sheet_name="Chart", header=76, usecols="B")
+df["currency_exchange_rate"] = pd.read_excel("data/raw/exchange_rates.xlsx", sheet_name="Chart", header=508, usecols="B")
+df["economic_perception_index"] = pd.read_excel("data/raw/IPEC.xlsx", sheet_name="Chart", header=2, usecols="B")
+df["economic_activity_indicator"] = pd.read_excel("data/raw/economic_activity.xlsx", sheet_name="Chart", header=88, usecols="B")
 
 cols = ["housing_new_construction", "housing_extensions", "non_residential_icef", "non_residential_services"]
 df[cols] = df[cols].apply(pd.to_numeric, errors="coerce")
-df[["month_sin", "month_cos"]] = df["month_year"].apply(lambda v: pd.Series(convert_date(v)))
+#df[["month_sin", "month_cos"]] = df["month_year"].apply(lambda v: pd.Series(convert_date(v)))
+
+df["date"] = pd.date_range(start="2002-03-01", periods=len(df), freq="MS")
 df = df.drop(columns=["month_year"])
 
+df = df.dropna(how="any")
+
 df.to_csv("data/processed/train_data.csv", index=False)
+
+
+
 print(df)
