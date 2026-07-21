@@ -12,7 +12,7 @@ import plotly
 from plotly import graph_objects as go
 import plotly.graph_objects as go
 from sklearn.preprocessing import MinMaxScaler
-from model import *
+from models.model import *
 
 
 def moving_average(data:torch.Tensor, window:int, cols:list):

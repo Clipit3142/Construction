@@ -23,7 +23,7 @@ def lagged_coorelations(df, feature_cols, target_cols, max_lag=10, diff=True):
     return results
 
 
-def heatmap(coor_dict, max_lag):
+def heatmap(coor_dict, max_lag, target_cols, feature_cols):
     fig = make_subplots(rows=len(target_cols)+1, cols=1, subplot_titles=target_cols)
 
     for i, target in enumerate(target_cols):
@@ -99,36 +99,34 @@ def stl(df, cols):
 
 
 
+def run_analysis():
+    df = pd.read_csv("data/processed/train_data.csv")
+    df = df.set_index("date")
+    df.index.freq = "MS"
 
-df = pd.read_csv("data/processed/train_data.csv")
-df = df.set_index("date")
-df.index.freq = "MS"
+    feature_cols = ["housing_new_construction", "housing_extensions", "non_residential_icef", "non_residential_services", "interest_rate", "currency_exchange_rate" ,"economic_perception_index", "economic_activity_indicator"]
+    target_cols = ["housing_new_construction", "housing_extensions", "non_residential_icef", "non_residential_services"]
 
-feature_cols = ["housing_new_construction", "housing_extensions", "non_residential_icef", "non_residential_services", "interest_rate", "currency_exchange_rate" ,"economic_perception_index", "economic_activity_indicator"]
-target_cols = ["housing_new_construction", "housing_extensions", "non_residential_icef", "non_residential_services"]
+    xgb_models = {}
+    for target in target_cols:
+        model = xgb.XGBRegressor()
+        model.load_model(f"models/xgb_{target}.json")
+        xgb_models[target] = model
 
-xgb_models = {}
-for target in target_cols:
-    model = xgb.XGBRegressor()
-    model.load_model(f"models/xgb_{target}.json")
-    xgb_models[target] = model
-
-prophet_models = {}
-for target in target_cols:
-    with open(f"models/prophet_{target}.json", "r") as f:
-        prophet_models[target] = model_from_json(f.read())
-
- 
+    prophet_models = {}
+    for target in target_cols:
+        with open(f"models/prophet_{target}.json", "r") as f:
+            prophet_models[target] = model_from_json(f.read())
 
 
-max_lag = 12
-coor_dict = lagged_coorelations(df, feature_cols, target_cols, max_lag)
+    max_lag = 12
+    coor_dict = lagged_coorelations(df, feature_cols, target_cols, max_lag)
 
 
-heatmap(coor_dict, max_lag)
-#bar(coor_dict, max_lag, target="non_residential_services", feature="non_residential_services")
-stls = stl(df, cols=feature_cols)
-resids = {row: stls[row]["resid"] for row in stls}
-coor_resid = lagged_coorelations(resids, feature_cols, target_cols, max_lag, diff=False)
-heatmap(coor_resid, max_lag)
-print(coor_resid)
+    heatmap(coor_dict, max_lag, target_cols, feature_cols)
+    #bar(coor_dict, max_lag, target="non_residential_services", feature="non_residential_services")
+    stls = stl(df, cols=feature_cols)
+    resids = {row: stls[row]["resid"] for row in stls}
+    coor_resid = lagged_coorelations(resids, feature_cols, target_cols, max_lag, diff=False)
+    heatmap(coor_resid, max_lag, target_cols, feature_cols)
+    print(coor_resid)
