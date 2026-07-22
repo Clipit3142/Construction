@@ -28,6 +28,7 @@ dependencies = [
     "pyparsing==3.3.2",
     "python-dateutil==2.9.0.post0",
     "requests==2.34.2",
+    "ruff>=0.15.22",
     "scikit-learn>=1.9.0",
     "scipy==1.18.0",
     "six==1.17.0",
@@ -45,3 +46,27 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["{models}"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",       # pycodestyle errors
+    "F",       # Pyflakes
+    "W",       # pycodestyle warnings
+    "I",       # isort
+    "PLR0915", # Too many statements
+]
+ignore = [
+    "F403",    # 'from module import *' used; unable to detect undefined names
+    "F405",    # Name may be undefined, or defined from star imports
+    "
+]
+
+[tool.ruff.lint.pylint]
+max-statements = 40
+
+[tool.ruff.format]
+quote-style = "double"
+
